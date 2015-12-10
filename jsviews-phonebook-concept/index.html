@@ -161,7 +161,6 @@
 						</div>
 
 						<button type="button" class="btn btn-primary btn-save">Сохранить</button>
-						<button type="button" class="btn btn-warning btn-edit-mode-off">Отменить</button>
 						<button type="button" class="btn btn-danger btn-delete" data-link="visible{:orgs[orgIndex]['workers'][workerIndex].id !== 'new'}">Удалить</button>
 					</form>
 
@@ -184,11 +183,11 @@
 
 	<script id="workerTmpl" type="text/x-jsrender">
 		<tr>
-			<td data-link="#getIndex() + 1"></td>
-			<td data-link="post"></td>
-			<td data-link="family +' '+ name +' '+ patr"></td>
-			<td data-link="phone"></td>
-			<td>
+			<td style="width: 5%;" data-link="#getIndex() + 1"></td>
+			<td style="width: 25%;" data-link="post"></td>
+			<td style="width: 35%;" data-link="family +' '+ name +' '+ patr"></td>
+			<td style="width: 25%;" data-link="phone"></td>
+			<td style="width: 10%;">
 				<span class="pull-right">
 					<span class="glyphicon glyphicon-pencil"></span>
 					<span class="glyphicon glyphicon-remove"></span>
@@ -199,10 +198,10 @@
 
 	<script id="workerFoundTmpl" type="text/x-jsrender">
 		<tr>
-			<td data-link="#getIndex() + 1"></td>
-			<td data-link="post"></td>
-			<td data-link="family +' '+ name +' '+ patr"></td>
-			<td>
+			<td style="width: 5%;" data-link="#getIndex() + 1"></td>
+			<td style="width: 25%;" data-link="post"></td>
+			<td style="width: 35%;" data-link="family +' '+ name +' '+ patr"></td>
+			<td style="width: 35%;">
 				<span class="pull-right" data-link="phone"></span>
 			</td>
 		</tr>
@@ -384,13 +383,6 @@
 				})
 				.on('click', '.btn-edit-mode-on', function() {
 					app.setMode(app.MODE.WORKER_EDIT);
-				})
-				.on('click', '.btn-edit-mode-off', function() {
-					if (app.orgs[app.orgIndex].workers[app.workerIndex].id === 'new') {
-						app.removeWorker();
-						return;
-					}
-					app.setMode(app.MODE.WORKER_VIEW);
 				})
 				.on('click', '.btn-save', function() {
 					app.saveWorker();
