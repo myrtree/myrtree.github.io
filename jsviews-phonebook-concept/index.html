@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>JsVeiws Phonebook concept</title>
+	<meta name="author" content="myrtree">
+	<meta name="description" content="JsVeiws Phonebook concept">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	
+	<style type="text/css">
+		.container {
+			margin-top: 5%;
+		}
+		.orgs, .workers tr, .workers-found tr {
+			cursor: pointer;
+		}
+		.panel-body {
+			height: 400px;
+			overflow-y: scroll;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="app" class="container">
+		<div class="col-sm-4 col-md-4 col-lg-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<input type="text" class="form-control input-sm org-filter" placeholder="поиск организации" data-link="orgFilter trigger=true">
+				</div>
+				<div class="orgs panel-body">
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Наименование организации</th>
+							</tr>
+						</thead>
+						<tbody data-link="{for orgs tmpl='#orgTmpl'}"></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-8 col-md-8 col-lg-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<input type="text" class="form-control input-sm org-filter" data-link="workerFilter trigger=true"  placeholder="поиск работника">
+				</div>
+				<div class="panel-body">
+					<div  data-link="visible{:mode === MODE.ORG_VIEW}">
+						<table class="table table-condensed table-hover">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Должность</th>
+									<th>ФИО</th>
+									<th>Телефон</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody class="workers" data-link="{for orgs[orgIndex]['workers'] tmpl='#workerTmpl'}"></tbody>
+						</table>
+						<button class="btn btn-primary btn-add-worker">Добавить</button>
+					</div>
+
+					<div data-link="visible{:mode === MODE.WORKERS_FOUND}">
+						<table class="table table-condensed table-hover">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Должность</th>
+									<th>ФИО</th>
+									<th>
+										<span class="pull-right">Телефон</span>
+									</th>
+								</tr>
+							</thead>
+							<tbody class="workers-found" data-link="{for workersFound tmpl='#workerFoundTmpl'}"></tbody>
+						</table>
+					</div>
+
+					<form class="form-horizontal" data-link="visible{:mode === MODE.WORKER_VIEW}">
+						<div class="form-group">
+							<div class="col-sm-12">
+								<button type="button" class="btn-back close"><span>&times;</span></button>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Фамилия:</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" data-link="orgs[orgIndex]['workers'][workerIndex].family"></p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Имя:</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" data-link="orgs[orgIndex]['workers'][workerIndex].name"></p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Отчество:</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" data-link="orgs[orgIndex]['workers'][workerIndex].patr"></p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Должность:</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" data-link="orgs[orgIndex]['workers'][workerIndex].post"></p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Телефон:</label>
+							<div class="col-sm-10">
+								<p class="form-control-static" data-link="orgs[orgIndex]['workers'][workerIndex].phone"></p>
+							</div>
+						</div>
+
+						<button type="button" class="btn btn-primary btn-edit-mode-on">Редактировать</button>
+						<button type="button" class="btn btn-danger btn-delete">Удалить</button>
+					</form>
+					
+					<form class="form-horizontal" data-link="visible{:mode === MODE.WORKER_EDIT}">
+						<div class="form-group">
+							<div class="col-sm-12">
+								<button type="button" class="btn-back close"><span>&times;</span></button>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Фамилия:</label>
+							<div class="col-sm-10">
+								<input type="text" data-link="orgs[orgIndex]['workers'][workerIndex].family" class="form-control" placeholder="Фамилия">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Имя:</label>
+							<div class="col-sm-10">
+								<input type="text" data-link="orgs[orgIndex]['workers'][workerIndex].name" class="form-control" placeholder="Имя">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Отчество:</label>
+							<div class="col-sm-10">
+								<input type="text" data-link="orgs[orgIndex]['workers'][workerIndex].patr" class="form-control" placeholder="Отчество">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Должность:</label>
+							<div class="col-sm-10">
+								<input type="text" data-link="orgs[orgIndex]['workers'][workerIndex].post" class="form-control" placeholder="Должность">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Телефон:</label>
+							<div class="col-sm-10">
+								<input type="text" data-link="orgs[orgIndex]['workers'][workerIndex].phone" class="form-control" placeholder="Телефон">
+							</div>
+						</div>
+
+						<button type="button" class="btn btn-primary btn-save">Сохранить</button>
+						<button type="button" class="btn btn-warning btn-edit-mode-off">Отменить</button>
+						<button type="button" class="btn btn-danger btn-delete" data-link="visible{:orgs[orgIndex]['workers'][workerIndex].id !== 'new'}">Удалить</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://www.jsviews.com/download/jsviews.min.js"></script>
+	<script src="mockorgs.js"></script>
+
+	<script id="orgTmpl" type="text/x-jsrender">
+		<tr data-link="visible{:~orgLikeFilter(name)} class{:#getIndex() === ~root.orgIndex ? 'info' : ''}">
+			<td data-link="#getIndex() + 1"></td>
+			<td data-link="name"></td>
+		</tr>
+	</script>
+
+	<script id="workerTmpl" type="text/x-jsrender">
+		<tr>
+			<td data-link="#getIndex() + 1"></td>
+			<td data-link="post"></td>
+			<td data-link="family +' '+ name +' '+ patr"></td>
+			<td data-link="phone"></td>
+			<td>
+				<span class="pull-right">
+					<span class="glyphicon glyphicon-pencil"></span>
+					<span class="glyphicon glyphicon-remove"></span>
+				</span>
+			</td>
+		</tr>
+	</script>
+
+	<script id="workerFoundTmpl" type="text/x-jsrender">
+		<tr>
+			<td data-link="#getIndex() + 1"></td>
+			<td data-link="post"></td>
+			<td data-link="family +' '+ name +' '+ patr"></td>
+			<td>
+				<span class="pull-right" data-link="phone"></span>
+			</td>
+		</tr>
+	</script>
+
+	<script type="text/javascript">
+		'use strict';
+
+		app = {
+			orgs: mockOrgs,
+
+			MODE: {
+				NOP: 0,
+				ORG_VIEW: 1,
+				WORKER_VIEW: 2,
+				WORKER_EDIT: 4,
+				WORKERS_FOUND: 8
+			},
+
+			mode: 1,
+			prevMode: 0,
+			orgIndex: 0,
+			workerIndex: 0,
+			newWorkerIdIncrement: 0,
+
+			orgFilter: '',
+			workerFilter: '',
+
+			workersFound: []
+		}
+
+		app.saveWorker = function() {
+			if (this.orgs[this.orgIndex].workers[this.workerIndex].id === 'new') {
+				this.orgs[this.orgIndex].workers[this.workerIndex].id += this.newWorkerIdIncrement++;
+			}
+
+			this.setMode(this.MODE.WORKER_VIEW);
+		};
+
+		app.addWorker = function() {
+			$.observable(this.orgs[this.orgIndex].workers).insert({
+				id: 'new',
+				name: '',
+				family: '',
+				patr: '',
+				post: '',
+				phone: ''
+			});
+
+			$.observable(this).setProperty(
+				'workerIndex',
+				this.orgs[this.orgIndex].workers.length - 1
+			);
+
+			this.setMode(this.MODE.WORKER_EDIT);
+		};
+
+		app.removeWorker = function(workerIndex) {
+			workerIndex = workerIndex || this.workerIndex;
+
+			this.setMode(this.MODE.ORG_VIEW);
+			$.observable(this.orgs[this.orgIndex].workers).remove(workerIndex);
+			$.observable(this).setProperty('workerIndex', 0);
+		};
+
+		app.setMode = function(mode) {
+			mode = mode || this.MODE.ORG_VIEW;
+
+			$.observable(this).setProperty('mode', mode);
+		};
+
+		app.selectOrg = function(orgIndex) {		
+			orgIndex = orgIndex || 0;
+
+			$.observable(this).setProperty('workerFilter', '');
+
+			$.observable(this)
+				.setProperty('workerIndex', 0)
+				.setProperty('orgIndex', orgIndex);
+
+			this.setMode(this.MODE.ORG_VIEW);
+		};
+
+		app.selectWorker = function(workerIndex, mode) {
+			workerIndex = workerIndex || this.workerIndex;
+			mode = mode || this.MODE.WORKER_VIEW;
+
+			$.observable(this).setProperty('workerIndex', workerIndex);
+
+			this.setMode(mode);
+		};
+
+		app.orgLikeFilter = function(prop) {
+			return prop.toUpperCase().indexOf(this.ctx.root.orgFilter.toUpperCase()) !== -1;
+		}
+
+		app.workerLikeFilter = function() {
+			var self = this,
+				_found = [];
+
+			if (this.prevMode === this.MODE.NOP) {
+				this.prevMode = this.mode;
+			}
+
+			if (this.workerFilter === '') {
+				$.observable(this.workersFound).refresh([]);
+				this.setMode(this.prevMode);
+				this.prevMode = this.MODE.NOP;
+				return;
+			}
+
+			for (var i = 0; i < this.orgs.length; i++) {
+				_found = this.orgs[i].workers.filter(function(worker) {
+					worker._orgIndex = i;
+					return (worker.family + ' ' + worker.name + ' ' + worker.patr)
+						.toUpperCase().indexOf(self.workerFilter.toUpperCase()) !== -1;
+				}).concat(_found);
+			}
+
+			$.observable(this.workersFound).refresh(_found);
+			this.setMode(this.MODE.WORKERS_FOUND);
+		}
+
+		$.views.helpers({
+			orgLikeFilter: app.orgLikeFilter
+		});
+		$.views.helpers.orgLikeFilter.depends = [app, 'orgFilter'];
+
+		$.observe(app, 'workerFilter', function() {
+			app.workerLikeFilter();
+		});
+
+		$(function() {
+			var orgsContainer = $('#app .orgs');
+
+			$.link(true, '#app', app)
+				.on('click', '.orgs tr', function() {
+					app.selectOrg($.view(this).getIndex());
+				})
+				.on('click', '.workers tr td:not(:last-child)', function() {
+					app.selectWorker($.view(this).getIndex());
+				})
+				.on('click', '.workers tr .glyphicon-pencil', function() {
+					app.selectWorker($.view(this).getIndex(), app.MODE.WORKER_EDIT);
+				})
+				.on('click', '.workers-found tr', function() {
+					$.observable(app).setProperty('orgFilter', '');
+
+					var foundWorkerIndex = $.view(this).getIndex();
+					var orgIndex = app.workersFound[foundWorkerIndex]._orgIndex + 1;
+
+					var foundWorkerOrg = orgsContainer.find('tr:eq('+ orgIndex + ')');
+					orgsContainer.animate({
+						scrollTop: orgsContainer.scrollTop()
+							- orgsContainer.offset().top
+							+ foundWorkerOrg.offset().top
+					}, 500);
+					orgsContainer.find('tr.info').removeClass('info');
+					foundWorkerOrg.addClass('info');
+				})
+				.on('click', '.workers tr .glyphicon-remove', function() {
+					if (!confirm('Вы уверены?')) {
+						return;
+					}
+					app.removeWorker($.view(this).getIndex());
+				})
+				.on('click', '.btn-delete', function() {
+					if (!confirm('Вы уверены?')) {
+						return;
+					}
+					app.removeWorker(this.workerIndex);
+				})
+				.on('click', '.btn-back', function() {
+					if (app.orgs[app.orgIndex].workers[app.workerIndex].id === 'new') {
+						app.removeWorker();
+						return;
+					}
+					app.setMode(app.MODE.ORG_VIEW);
+				})
+				.on('click', '.btn-edit-mode-on', function() {
+					app.setMode(app.MODE.WORKER_EDIT);
+				})
+				.on('click', '.btn-edit-mode-off', function() {
+					if (app.orgs[app.orgIndex].workers[app.workerIndex].id === 'new') {
+						app.removeWorker();
+						return;
+					}
+					app.setMode(app.MODE.WORKER_VIEW);
+				})
+				.on('click', '.btn-save', function() {
+					app.saveWorker();
+				})
+				.on('click', '.btn-add-worker', function() {
+					app.addWorker();
+				});
+		});
+	</script>
+</body>
+</html>
