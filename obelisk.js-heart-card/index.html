@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="UTF-8">
+	<title>Life</title>
+	<meta name="description" content="obelisk.js heart card">
+	<style type="text/css">
+		html, body {
+			margin: 0;
+			padding: 0;
+			border: 0;
+			background: #FFF3F9;
+		}
+
+		canvas {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+
+	<!-- <script type="text/javascript" src="js/obelisk.js"></script> -->
+	<script type="text/javascript" src="//nosir.github.io/obelisk.js/dist/obelisk.min.1.0.2.js"></script>
+	<script type="text/javascript">
+
+//                    * * * * * *                   * * * * * * 
+//                * * *         * * *           * * *         * * * 
+//            * * *                 * *       * *                 * * * 
+//            *                       * *   * *                       * 
+//          *                           *   *                           * 
+//        * *                           * * *                           * * 
+//        *                               *                               * 
+//        *                               *                               * 
+//        *                                                               * 
+//        *                                                               * 
+//        *                                                               * 
+//        * *                                                           * * 
+//          *                                                           * 
+//          * *                                                       * * 
+//            * *                                                   * * 
+//              * *                                               * * 
+//                * *                                           * * 
+//                  * *                                       * * 
+//                    * *                                   * * 
+//                      * *                               * * 
+//                        * *                           * * 
+//                          * *                       * * 
+//                            * *                   * * 
+//                              * *               * * 
+//                                * *           * * 
+//                                  * *       * * 
+//                                    * *   * * 
+//                                      * * * 
+//                                        * 
+
+		var canvas = document.getElementById('canvas');
+		canvas.width  = window.innerWidth;
+		canvas.height = window.innerHeight;
+
+		function Heart(canvas, cubeSize) {
+			'use strict';
+
+			this._heartArray = [
+				[0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,0,0],
+				[0,0,0,0,2,2,2,1,1,1,1,1,1,2,2,0,0,0,0,2,2,2,1,1,1,1,1,1,2,2,0,0,0,0,0],
+				[0,0,2,2,2,1,1,1,1,1,1,1,1,1,1,2,0,0,2,2,1,1,1,1,1,1,1,1,1,1,2,2,0,0,0],
+				[0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0],
+				[0,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0],
+				[2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0],
+				[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+				[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+				[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+				[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+				[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+				[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+				[2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2],
+				[0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0],
+				[0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0],
+				[0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0],
+				[0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0],
+				[0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0],
+				[0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0],
+				[0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			];
+
+			this._points = [];
+			this._heightsMap = [];
+			this._iterationRate = 100;
+
+			this._init = function() {
+				this._cubeSize = cubeSize || 12;
+
+				this._width = this._heartArray[0].length;
+				this._height = this._heartArray.length;
+
+				this._centerPoint = new obelisk.Point3D(canvas.width / 2, canvas.height / 2 - 200, 0);
+				this._view = new obelisk.PixelView(canvas, this._centerPoint);
+				this._cubeColor = new obelisk.CubeColor().getByHorizontalColor(obelisk.ColorPattern.PINK);
+				this._emptyCubeColor = new obelisk.CubeColor().getByHorizontalColor(0xFFF3F9);
+				this._emptycubeDimension = new obelisk.CubeDimension(this._cubeSize, this._cubeSize, 10);
+				this._emptyCube = new obelisk.Cube(this._emptycubeDimension, this._emptyCubeColor);
+
+				this._cubes = [];
+				for (var i = 0; i < 10; i++) {
+					var cubeDimension = new obelisk.CubeDimension(this._cubeSize, this._cubeSize, 10 + i*2);
+					this._cubes[i] = new obelisk.Cube(cubeDimension, this._cubeColor);
+				}
+
+				this._generatePoints();
+			};
+
+			this._generatePoints = function() {
+				for (var i = 0, y = 0; i < this._height; i++, y = i * this._cubeSize) {
+					this._points[i] = [];
+					this._heightsMap[i] = [];
+					for (var x = 0, j = 0; j < this._width; j++, x = j * this._cubeSize) {
+						this._points[i][j] = new obelisk.Point3D(x, y, 0);
+					}
+				}
+			};
+
+			this._draw = function() {
+				for (var i in this._points) {
+					for (var j in this._points[i]) {
+						if (this._heartArray[i][j]) {
+							var cube;
+							if (this._heartArray[i][j] === 1) {
+								var level = this._heightsMap[i][j];
+								cube = this._cubes[level];
+							} else {
+								cube = this._emptyCube;
+							}
+
+							this._view.renderObject(cube, this._points[i][j]);
+						}
+					}
+				}
+			};
+
+			this._c = 51.2;
+			this._i = 0;
+			this._pulseIncrement = -4;
+
+			this._beatTick = function() {
+				var paraboloid = function(i, j, c) {
+					var x = i - 15,
+						y = j - 15;
+
+					var z = Math.floor(-x*x / c - y*y / c) + 9;
+					// return Math.floor(-x*x / c - y*y / c) + 9;
+					return z < 0 ? 0 : z;
+				};
+
+				for (var i in this._points) {
+					for (var j in this._points[i]) {
+						if (this._heartArray[i][j]) {
+							this._heightsMap[i][j] = paraboloid(i, j, this._c);
+						}
+					}
+				}
+
+				this._c += this._pulseIncrement;
+				this._i++;
+				if (this._i === 9) {
+					this._pulseIncrement = -this._pulseIncrement;
+					this._i = 0;
+				}
+			};
+
+			this.beat = function() {
+				var self = this;
+
+				this._looped = true;
+				var interval = setInterval(function() {
+					if (!self._looped) {
+						clearInterval(interval);
+						return;
+					}
+
+					self._beatTick();
+					self._draw();
+				}, this._iterationRate);
+			};
+
+			this.stopBeat = function() {
+				this._looped = false;
+			};
+
+			this._init();
+			this._beatTick();
+			this._draw();
+		}
+
+		var heart = new Heart(canvas);
+		heart.beat();
+	</script>
+</body>
+</html>
